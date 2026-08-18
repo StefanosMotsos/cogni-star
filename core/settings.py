@@ -82,6 +82,10 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

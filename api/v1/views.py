@@ -1,7 +1,7 @@
 import logging
 
 from rest_framework.authtoken.admin import User
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -39,6 +39,11 @@ class PersonViewSet(ModelViewSet):
         else:
             permission_classes = [IsAuthenticated, IsAdminUser]
         return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        if serializer.validated_data['homeworld'] is None:
+            raise ValidationError("person must have a homeworld")
+        serializer.save()
 
 class UserDetailsAPIView(RetrieveUpdateAPIView):
     queryset = User.objects.all()

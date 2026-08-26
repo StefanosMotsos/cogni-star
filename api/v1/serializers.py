@@ -7,10 +7,14 @@ from api.models import Person, Planet
 class PlanetSerializer(serializers.ModelSerializer):
 
     uuid = serializers.UUIDField(read_only=True)
+    resident_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Planet
         exclude = ('id',)
+
+    def get_resident_count(self, obj):
+        return obj.resident_count
 
 class PersonSerializer(serializers.ModelSerializer):
 
@@ -20,6 +24,11 @@ class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         exclude = ('id',)
+
+    def validate_height(self, value):
+        if value.isdigit and int(value) < 0:
+            raise serializers.ValidationError('Height cannot be negative')
+        return value
 
 class UserSerializer(serializers.ModelSerializer):
 

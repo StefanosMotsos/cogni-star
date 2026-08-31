@@ -1,5 +1,6 @@
 import logging
 
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authtoken.admin import User
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -10,6 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.clients.swapi_client import fetch_swapi_planets, fetch_swapi_people
 from api.models import Planet, Person
+from api.v1.filters import PersonFilter
 from api.v1.pagination import SmallSetPagination
 from api.v1.permissions import IsOwnerOrAdmin
 from api.v1.serializers import PlanetSerializer, PersonSerializer, UserSerializer
@@ -32,6 +34,9 @@ class PersonViewSet(ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     pagination_class = SmallSetPagination
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PersonFilter
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:

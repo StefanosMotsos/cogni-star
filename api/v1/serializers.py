@@ -14,7 +14,7 @@ class PlanetSerializer(serializers.ModelSerializer):
         exclude = ('id',)
 
     def get_resident_count(self, obj):
-        return obj.resident_count
+        return obj.residents.count()
 
 class PersonSerializer(serializers.ModelSerializer):
 
@@ -26,7 +26,7 @@ class PersonSerializer(serializers.ModelSerializer):
         exclude = ('id',)
 
     def validate_height(self, value):
-        if value.isdigit and int(value) < 0:
+        if value.isdigit() and int(value) < 0:
             raise serializers.ValidationError('Height cannot be negative')
         return value
 
